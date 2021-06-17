@@ -14,9 +14,12 @@ const startServer = async () => {
 
   const pubsub = new PubSub();
 
-  const url = "http://localhost:4000";
+  const port = process.env.PORT || 4000;
+
+  const url = process.env.URL || "http://localhost:4000";
 
   const server = new ApolloServer({
+    cors: true,
     typeDefs: fs.readFileSync('schema.graphql', 'utf-8'),
     resolvers,
     formatError: (error) => {
@@ -28,7 +31,9 @@ const startServer = async () => {
 
   await connectToDb();
 
-  server.listen().then(({url: url}) => {
+  server.listen({
+    port: port
+  }).then(({url: url}) => {
     console.log(`Server at ${url}`);
   });
 }
